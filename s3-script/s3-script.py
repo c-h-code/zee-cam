@@ -21,15 +21,22 @@ s3 = boto3.client(
     region_name=AWS_REGION             
 )
 
+control_flag = s3.get_object(Bucket=BUCKET_NAME, Key ="control/run_flag.txt")['Body'].read().decode('utf-8')
 
 bucket = "zee-vid-repo"
 dir_path = "/home/ronnoc/workspace/zee-cam/s3-script/video-repo/"
 files = glob.glob(dir_path + "*")
 file = max(files, key=os.path.getmtime)
-try:
-    s3.upload_file(file, bucket, os.path.basename(file) )
-except Exception as e:
-    print(f"Upload failed: {e}")
+
+if control_flag:
+    try:
+        s3.upload_file(
+            file,
+            BUCKET_NAME,
+            os.path.basename(file),  
+            ExtraArgs={"Tagging": "autodelete=true"})
+    except Exception as e:
+        print(f"Upload failed: {e}")
 
 os.remove(file)
 
