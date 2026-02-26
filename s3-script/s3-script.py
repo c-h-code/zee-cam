@@ -4,6 +4,7 @@ import time
 import boto3
 from botocore.exceptions import ClientError
 import os
+import sys
 import glob
 from dotenv import load_dotenv
 load_dotenv()
@@ -22,11 +23,7 @@ s3 = boto3.client(
 )
 
 control_flag = s3.get_object(Bucket=BUCKET_NAME, Key ="control/run_flag.txt")['Body'].read().decode('utf-8')
-
-bucket = "zee-vid-repo"
-dir_path = "/home/ronnoc/workspace/zee-cam/s3-script/video-repo/"
-files = glob.glob(dir_path + "*")
-file = max(files, key=os.path.getmtime)
+file = sys.argv[1]
 
 if control_flag:
     try:
@@ -35,10 +32,12 @@ if control_flag:
             BUCKET_NAME,
             os.path.basename(file),  
             ExtraArgs={"Tagging": "autodelete=true"})
+    
+        os.remove(file)
     except Exception as e:
         print(f"Upload failed: {e}")
 
-os.remove(file)
+    
 
 
 
