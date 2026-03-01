@@ -1,4 +1,0 @@
-.env
-/s3-script/video-repo
-/zee-cam-django/venv/
-zee-cam-django/db.sqlite3
