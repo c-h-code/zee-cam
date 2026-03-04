@@ -12,7 +12,7 @@ def upload_s3(folder, path):
     if control_flag == "True":
         try:
             s3.upload_file(
-                vid_path,
+                path,
                 BUCKET_NAME,
                 f"{folder}/{os.path.basename(path)}",  
                 ExtraArgs={"Tagging": "autodelete=true"})
@@ -22,9 +22,9 @@ def upload_s3(folder, path):
             print(f"Upload failed: {e}")
 
 def generate_thumb(vid_path):
-    thumb_path = vid_path.replace("video-repo/", "thumb-repo/").replace(".mp4",".jpeg")
+    thumb_path = vid_path.replace("video-repo/", "thumb-repo/").replace(".mp4",".jpg")
 
-    cmd = ["ffmpeg","-i", vid_path, "-ss", "00:00:03" , "-frames:v", "1", thumb_path]
+    cmd = ["ffmpeg","-y", "-ss", "00:00:10" , "-i", vid_path, "-frames:v", "1", "-q:v", "4", thumb_path]
 
     subprocess.run(cmd, check=True)
 
@@ -43,8 +43,8 @@ s3 = session.client("s3")
 control_flag = s3.get_object(Bucket=BUCKET_NAME, Key ="control/run_flag.txt")['Body'].read().decode('utf-8')
 vid_path = sys.argv[1]
 
-upload_s3(generate_thumb(vid_path))
-upload_s3(vid_path)
+upload_s3("thumbnails", generate_thumb(vid_path))
+upload_s3("videos", vid_path)
 
 
 
