@@ -13,17 +13,10 @@ def list_videos(limit=20):
 
     return response["Items"]
 
-def get_video(video_id : str):
-    response = table.get_item(
-        Key={"id": video_id}
-        
-    )
-    return response.get("Item")
+
 
 def delete_video(video_id : str):
     response = table.delete_item(
         Key={"id": video_id},
-        ReturnValues="ALL_OLD"
     )
-    print(f"deleting video: {video_id}")
     return response
