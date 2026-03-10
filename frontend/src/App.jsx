@@ -62,8 +62,7 @@ function LoginPage({ onLogin }) {
     <div className="login-screen">
       <form className="login-card" onSubmit={handleSubmit}>
         <div className="login-brand">
-          <span className="brand-dot" />
-          ZeeCam
+          🐈‍⬛ ZeeCam
         </div>
         <div className="form-group">
           <label className="form-label">Username</label>
@@ -151,8 +150,7 @@ function Navbar({ onSettingsOpen, onLogout }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <span className="brand-dot" />
-        ZeeCam
+        🐈‍⬛ ZeeCam
       </div>
       <div className="navbar-actions">
         <button className="btn btn-ghost" onClick={onSettingsOpen}>Settings</button>
